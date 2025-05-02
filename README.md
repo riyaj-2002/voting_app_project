@@ -37,14 +37,14 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
    - **VPC**: Select the VPC.
    - **Subnet name**: `pub-sub-project`
    - **CIDR block**: `10.0.0.1/24`
-# Click **Create Subnet**.
+   - Click **Create Subnet**.
 
 ### Private Subnet:
 # Set the following for the private subnet:
    - **VPC**: Select the VPC.
    - **Subnet name**: `pri-sub-project`
    - **CIDR block**: `10.0.0.128/24`
-# Click **Create Subnet**.
+   - Click **Create Subnet**.
 
 ![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204445.png)
 
@@ -175,7 +175,7 @@ Visit:
   - Results: `http://<your-ec2-ip>:8081`
 
 
-![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-29%20135413.png)
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/cea6d1d092e422995ae6ca56611fb64324fcc278/Screenshot%202025-04-29%20135413.png)
 
 ![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-05-02%20143024.png)
 
