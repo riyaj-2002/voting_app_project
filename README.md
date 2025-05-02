@@ -1,17 +1,83 @@
 
-# 🗳️ Voting App Deployment on EC2 (Ubuntu)
+# 🗳️ Voting App Deployment 
 
-This guide helps you deploy the [Docker Example Voting App](https://github.com/dockersamples/example-voting-app) on an **Amazon EC2 Ubuntu instance** using Docker and Docker Compose.
+This project is a full-stack voting application with:
+
+- **Frontend:** Python (e.g., Flask) and Node.js (Express)
+- **Backend API:** .NET (Worker) 
+- **Database:** Redis for messaging and Postgres for storage.
+
+
+Deployed via Docker Compose on an **Ubuntu EC2** instance.
 
 ---
 
 ## 🚀 Prerequisites
 
-- EC2 instance running **Ubuntu** (20.04 or later)
+- EC2 instance running **Ubuntu** 
 - Ports **22**, **80**, and **5000** open in Security Group
 - SSH access to your instance
 
 ---
+
+## 🛠️ AWS Setup: VPC, Subnets, Route Table, Internet Gateway and EC2 Instance
+
+## 1. Create a VPC
+# Set the following:
+   - **VPC Name:** `vpc-project`
+   - **IPv4 CIDR block:** `10.0.0.0/24`
+   - Set **Tenancy** as `Default`.
+   - Click **Create VPC**.
+
+  ![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204426.png)   
+
+## 2. Create Subnets
+### Public Subnet:
+# Set the following for the public subnet:
+   - **VPC**: Select the VPC.
+   - **Subnet name**: `pub-sub-project`
+   - **CIDR block**: `10.0.0.1/24`
+# Click **Create Subnet**.
+
+### Private Subnet:
+# Set the following for the private subnet:
+   - **VPC**: Select the VPC.
+   - **Subnet name**: `pri-sub-project`
+   - **CIDR block**: `10.0.0.128/24`
+# Click **Create Subnet**.
+
+![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204445.png)
+
+## 3. Create an Internet Gateway (IGW)
+# Set the following for the private subnet:
+  - **IGW Name:** `igw-project`
+# Attach the IGW:
+   - Select the VPC and click **Attach**.
+
+![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204548.png)
+
+## 4. Create a Route Table (RT)
+# Set the following:
+  - **RT Name:** `rt-project`
+  - Add a route: `0.0.0.0/0` → Target: `igw-project`.
+  - Associate the Route Table with the Public Subnet and Private Subnet
+
+![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204525.png)
+
+---
+
+## 🛠️ EC2 Instance Setup
+
+## 1. Launch EC2 Instance
+# Set the following:
+   - **InstanceType:** t2.medium
+   - **KeyName:** key.pair.pem
+   - **VPC:** vpc-project
+   - **SUBNET:** pub-sub-project
+   - **SECURITY GROUP:** SSH (port 22) , HTTP (port 80) , HTTPS (port 443) 
+
+![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204640.png)
+
 
 ## ⚙️ Install Docker and Docker Compose
 
@@ -52,3 +118,66 @@ newgrp docker
 # Verify installation
 docker --version
 docker compose version
+
+```
+
+---
+
+### 2. Clone the Voting App Repository
+
+```bash
+git clone https://github.com/riyaj-2002/voting_app_roject.git
+cd voting_app_project
+```
+
+---
+
+### 3. Run the Application
+
+```bash
+docker compose up -d
+```
+
+This will start:
+- Python app on port `8080`
+- Node.js app on port `8081`
+
+---
+
+## 🌐 Access the App
+
+```bash
+curl ifconfig.me
+```
+
+---
+
+
+##  See the Running Ports
+```bash
+docker ps
+```
+---
+
+## 🛑 Stop the App (Optional)
+
+```bash
+docker compose down
+```
+
+---
+
+
+## ✅ Application is Live!
+
+Visit:
+  - Vote: `http://<your-ec2-ip>:8080`
+  - Results: `http://<your-ec2-ip>:8081`
+
+
+![image alt]()
+
+![image alt]()
+
+![image alt]()
+
