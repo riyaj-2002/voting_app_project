@@ -1,65 +1,54 @@
-# Example Voting App
 
-A simple distributed application running across multiple Docker containers.
+# 🗳️ Voting App Deployment on EC2 (Ubuntu)
 
-## Getting started
+This guide helps you deploy the [Docker Example Voting App](https://github.com/dockersamples/example-voting-app) on an **Amazon EC2 Ubuntu instance** using Docker and Docker Compose.
 
-Download [Docker Desktop](https://www.docker.com/products/docker-desktop) for Mac or Windows. [Docker Compose](https://docs.docker.com/compose) will be automatically installed. On Linux, make sure you have the latest version of [Compose](https://docs.docker.com/compose/install/).
+---
 
-This solution uses Python, Node.js, .NET, with Redis for messaging and Postgres for storage.
+## 🚀 Prerequisites
 
-Run in this directory to build and run the app:
+- EC2 instance running **Ubuntu** (20.04 or later)
+- Ports **22**, **80**, and **5000** open in Security Group
+- SSH access to your instance
 
-```shell
-docker compose up
-```
+---
 
-The `vote` app will be running at [http://localhost:8080](http://localhost:8080), and the `results` will be at [http://localhost:8081](http://localhost:8081).
+## ⚙️ Install Docker and Docker Compose
 
-Alternately, if you want to run it on a [Docker Swarm](https://docs.docker.com/engine/swarm/), first make sure you have a swarm. If you don't, run:
+```bash
+# Update and install prerequisites
+sudo apt update
+sudo apt install -y \
+    ca-certificates \
+    curl \
+    gnupg \
+    lsb-release \
+    git
 
-```shell
-docker swarm init
-```
+# Add Docker’s GPG key
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
+    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 
-Once you have your swarm, in this directory run:
+# Set up the Docker repository
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+  https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
-```shell
-docker stack deploy --compose-file docker-stack.yml vote
-```
+# Install Docker Engine and Docker Compose
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
 
-## Run the app in Kubernetes
+# Start Docker and enable it at boot
+sudo systemctl enable docker
+sudo systemctl start docker
 
-The folder k8s-specifications contains the YAML specifications of the Voting App's services.
+# Add your user to the docker group
+sudo usermod -aG docker $USER
+newgrp docker
 
-Run the following command to create the deployments and services. Note it will create these resources in your current namespace (`default` if you haven't changed it.)
-
-```shell
-kubectl create -f k8s-specifications/
-```
-
-The `vote` web app is then available on port 31000 on each host of the cluster, the `result` web app is available on port 31001.
-
-To remove them, run:
-
-```shell
-kubectl delete -f k8s-specifications/
-```
-
-## Architecture
-
-![Architecture diagram](architecture.excalidraw.png)
-
-* A front-end web app in [Python](/vote) which lets you vote between two options
-* A [Redis](https://hub.docker.com/_/redis/) which collects new votes
-* A [.NET](/worker/) worker which consumes votes and stores them in…
-* A [Postgres](https://hub.docker.com/_/postgres/) database backed by a Docker volume
-* A [Node.js](/result) web app which shows the results of the voting in real time
-
-## Notes
-
-The voting application only accepts one vote per client browser. It does not register additional votes if a vote has already been submitted from a client.
-
-This isn't an example of a properly architected perfectly designed distributed app... it's just a simple
-example of the various types of pieces and languages you might see (queues, persistent data, etc), and how to
-deal with them in Docker at a basic level.
+# Verify installation
+docker --version
+docker compose version
