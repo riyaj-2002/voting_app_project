@@ -29,7 +29,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
    - Set **Tenancy** as `Default`.
    - Click **Create VPC**.
 
-  ![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204426.png)   
+  ![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-05-02%20152216.png)   
 
 ## 2. Create Subnets
 ### Public Subnet:
@@ -46,7 +46,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
    - **CIDR block**: `10.0.0.128/24`
 # Click **Create Subnet**.
 
-![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204445.png)
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204445.png)
 
 ## 3. Create an Internet Gateway (IGW)
 # Set the following for the private subnet:
@@ -54,7 +54,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
 # Attach the IGW:
    - Select the VPC and click **Attach**.
 
-![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204548.png)
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204548.png)
 
 ## 4. Create a Route Table (RT)
 # Set the following:
@@ -62,7 +62,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
   - Add a route: `0.0.0.0/0` → Target: `igw-project`.
   - Associate the Route Table with the Public Subnet and Private Subnet
 
-![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204525.png)
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204525.png)
 
 ---
 
@@ -76,7 +76,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
    - **SUBNET:** pub-sub-project
    - **SECURITY GROUP:** SSH (port 22) , HTTP (port 80) , HTTPS (port 443) 
 
-![image alt](https://github.com/riyaj-2002/ecommerce-django_project/blob/d719fb55cdd89c7c343e54c7b08989192237673e/Screenshot%202025-04-23%20204640.png)
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-29%20143622.png)
 
 
 ## ⚙️ Install Docker and Docker Compose
@@ -175,9 +175,9 @@ Visit:
   - Results: `http://<your-ec2-ip>:8081`
 
 
-![image alt]()
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-29%20135413.png)
 
-![image alt]()
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-05-02%20143024.png)
 
-![image alt]()
+![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-05-02%20142957.png)
 
