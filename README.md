@@ -135,7 +135,7 @@ cd voting_app_project
 ### 3. Run the Application
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 This will start:
