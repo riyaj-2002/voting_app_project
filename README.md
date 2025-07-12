@@ -27,7 +27,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
    - **VPC Name:** `vpc-project`
    - **IPv4 CIDR block:** `10.0.0.0/24`
    - Set **Tenancy** as `Default`.
-   - Click **Create VPC**.
+     
 
   ![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-05-02%20152216.png)   
 
@@ -37,16 +37,7 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
    - **VPC**: Select the VPC.
    - **Subnet name**: `pub-sub-project`
    - **CIDR block**: `10.0.0.1/24`
-   - Click **Create Subnet**.
 
-### Private Subnet:
-# Set the following for the private subnet:
-   - **VPC**: Select the VPC.
-   - **Subnet name**: `pri-sub-project`
-   - **CIDR block**: `10.0.0.128/24`
-   - Click **Create Subnet**.
-
-![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204445.png)
 
 ## 3. Create an Internet Gateway (IGW)
 # Set the following for the private subnet:
@@ -54,17 +45,12 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
 # Attach the IGW:
    - Select the VPC and click **Attach**.
 
-![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204548.png)
 
 ## 4. Create a Route Table (RT)
 # Set the following:
   - **RT Name:** `rt-project`
   - Add a route: `0.0.0.0/0` → Target: `igw-project`.
-  - Associate the Route Table with the Public Subnet and Private Subnet
-
-![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-04-23%20204525.png)
-
----
+  - Associate the Route Table with the Public Subnet 
 
 ## 🛠️ EC2 Instance Setup
 
@@ -82,48 +68,40 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
 ## ⚙️ Install Docker and Docker Compose
 
 ```bash
-# Update and install prerequisites
-sudo apt update
-sudo apt install -y \
-    ca-certificates \
-    curl \
-    gnupg \
-    lsb-release \
-    git
+#!/bin/bash
+# Setup Docker Engine and Docker Compose (v2)
 
-# Add Docker’s GPG key
-sudo mkdir -p /etc/apt/keyrings
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | \
-    sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+set -euo pipefail
 
-# Set up the Docker repository
-echo \
-  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
-  https://download.docker.com/linux/ubuntu \
-  $(lsb_release -cs) stable" | \
-  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+# Update and install Docker
+sudo apt update -y
+sudo apt install -y docker.io curl
 
-# Install Docker Engine and Docker Compose
-sudo apt update
-sudo apt install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+# Enable and start Docker service
+sudo systemctl enable --now docker
 
-# Start Docker and enable it at boot
-sudo systemctl enable docker
-sudo systemctl start docker
+# Install Docker Compose v2 (standalone)
+COMPOSE_VERSION="v2.38.2"
+DESTINATION="/usr/local/bin/docker-compose"
 
-# Add your user to the docker group
-sudo usermod -aG docker $USER
-newgrp docker
+sudo curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o "$DESTINATION"
+sudo chmod +x "$DESTINATION"
 
-# Verify installation
+# Optional: create symlink for backward compatibility
+if ! command -v docker-compose &> /dev/null; then
+    sudo ln -s "$DESTINATION" /usr/bin/docker-compose
+fi
+
+# Print versions to verify
 docker --version
-docker compose version
+docker-compose --version
+
 
 ```
 
 ---
 
-### 2. Clone the Voting App Repository
+### Clone the Voting App Repository
 
 ```bash
 git clone https://github.com/riyaj-2002/voting_app_roject.git
@@ -131,48 +109,43 @@ cd voting_app_project
 ```
 
 ---
+### Push the Docker Images to DockerHub
 
-### 3. Run the Application
+# Vote Service
+docker build --target final -t 17082002/voting-app:vote ./vote
+docker push 17082002/voting-app:vote
 
-```bash
-docker compose up -d
-```
+# Result Service
+docker build -t 17082002/voting-app:result ./result
+docker push 17082002/voting-app:result
 
-This will start:
-- Python app on port `8080`
-- Node.js app on port `8081`
-
----
-
-## 🌐 Access the App
-
-```bash
-curl ifconfig.me
-```
+# Worker Service
+docker build -t 17082002/voting-app:worker ./worker
+docker push 17082002/voting-app:worker
 
 ---
 
+### Deploy All Services to Kubernetes
 
-##  See the Running Ports
-```bash
-docker ps
-```
----
+# Apply all deployments
+kubectl apply -f redis-deployment.yaml
+kubectl apply -f postgres-deployment.yaml
+kubectl apply -f vote-deployment.yaml
+kubectl apply -f result-deployment.yaml
+kubectl apply -f worker-deployment.yaml
 
-## 🛑 Stop the App (Optional)
-
-```bash
-docker compose down
-```
-
----
+# Apply All services
+kubectl apply -f redis-service.yaml
+kubectl apply -f postgres-service.yaml
+kubectl apply -f vote-service.yaml
+kubectl apply -f result-service.yaml
 
 
 ## ✅ Application is Live!
 
 Visit:
-  - Vote: `http://<your-ec2-ip>:8080`
-  - Results: `http://<your-ec2-ip>:8081`
+  - Vote: `http://<your-ec2-ip>:31000`
+  - Results: `http://<your-ec2-ip>:31001`
 
 
 ![image alt](https://github.com/riyaj-2002/voting_app_project/blob/cea6d1d092e422995ae6ca56611fb64324fcc278/Screenshot%202025-04-29%20135413.png)
