@@ -22,8 +22,8 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
 
 ## 🛠️ AWS Setup: VPC, Subnets, Route Table, Internet Gateway and EC2 Instance
 
-## 1. Create a VPC
-# Set the following:
+### 1. Create a VPC
+
    - **VPC Name:** `vpc-project`
    - **IPv4 CIDR block:** `10.0.0.0/24`
    - Set **Tenancy** as `Default`.
@@ -34,8 +34,8 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
 
 ## 🛠️ EC2 Instance Setup
 
-## 1. Launch EC2 Instance
-# Set the following:
+### 1. Launch EC2 Instance
+
    - **InstanceType:** t2.medium
    - **KeyName:** key.pair.pem
    - **VPC:** vpc-project
@@ -81,7 +81,7 @@ docker-compose --version
 
 ---
 
-### Clone the Voting App Repository
+## Clone the Voting App Repository
 
 ```bash
 git clone https://github.com/riyaj-2002/voting_app_roject.git
