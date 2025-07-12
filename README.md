@@ -31,26 +31,6 @@ Deployed via Docker Compose on an **Ubuntu EC2** instance.
 
   ![image alt](https://github.com/riyaj-2002/voting_app_project/blob/d6f3aa6158fad53cf432cc1bc71930d9aa32dc04/Screenshot%202025-05-02%20152216.png)   
 
-## 2. Create Subnets
-### Public Subnet:
-# Set the following for the public subnet:
-   - **VPC**: Select the VPC.
-   - **Subnet name**: `pub-sub-project`
-   - **CIDR block**: `10.0.0.1/24`
-
-
-## 3. Create an Internet Gateway (IGW)
-# Set the following for the private subnet:
-  - **IGW Name:** `igw-project`
-# Attach the IGW:
-   - Select the VPC and click **Attach**.
-
-
-## 4. Create a Route Table (RT)
-# Set the following:
-  - **RT Name:** `rt-project`
-  - Add a route: `0.0.0.0/0` → Target: `igw-project`.
-  - Associate the Route Table with the Public Subnet 
 
 ## 🛠️ EC2 Instance Setup
 
@@ -109,37 +89,45 @@ cd voting_app_project
 ```
 
 ---
-### Push the Docker Images to DockerHub
+## Push the Docker Images to DockerHub
 
-# Vote Service
+### Vote Service
+```bash
 docker build --target final -t 17082002/voting-app:vote ./vote
 docker push 17082002/voting-app:vote
+```
 
-# Result Service
+### Result Service
+```bash
 docker build -t 17082002/voting-app:result ./result
 docker push 17082002/voting-app:result
+```
 
-# Worker Service
+### Worker Service
+```bash
 docker build -t 17082002/voting-app:worker ./worker
 docker push 17082002/voting-app:worker
-
+```
 ---
 
-### Deploy All Services to Kubernetes
+## Deploy All Services to Kubernetes
 
-# Apply all deployments
+### Apply all deployments
+```bash
 kubectl apply -f redis-deployment.yaml
 kubectl apply -f postgres-deployment.yaml
 kubectl apply -f vote-deployment.yaml
 kubectl apply -f result-deployment.yaml
 kubectl apply -f worker-deployment.yaml
+```
 
-# Apply All services
+### Apply All services
+```bash
 kubectl apply -f redis-service.yaml
 kubectl apply -f postgres-service.yaml
 kubectl apply -f vote-service.yaml
 kubectl apply -f result-service.yaml
-
+```
 
 ## ✅ Application is Live!
 
